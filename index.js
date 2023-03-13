@@ -18,13 +18,13 @@ const configuration = new Configuration({
     apiKey: process.env.OPENAI_KEY,
 })
 const openai = new OpenAIApi(configuration);
+let conversationalLog = [{ role: 'system',content: "I am an AI bot"}];
 
 bot.on('messageCreate', async (message) =>{
     if (message.author.bot) return;
     if (message.channelId != process.env.CHANNEL_ID) return;
     if (message.content.startsWith(".")) return;
     
-    let conversationalLog = [{ role: 'system',content: "I am an AI bot"}];
     await message.channel.sendTyping();
 
     let prevmsg = await message.channel.messages.fetch({ limit: 15 });
