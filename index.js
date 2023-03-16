@@ -18,7 +18,7 @@ const configuration = new Configuration({
     apiKey: process.env.OPENAI_KEY,
 })
 const openai = new OpenAIApi(configuration);
-let conversationalLog = [{ role: 'system',content: "I am an AI bot"}];
+let conversationalLog = [{ role: 'system',content: "A AI Assistant"}];
 
 bot.on('messageCreate', async (message) =>{
     if (message.author.bot) return;
@@ -33,18 +33,13 @@ bot.on('messageCreate', async (message) =>{
     prevmsg.forEach((msg) => {
         if (message.content.startsWith(".")) return;
         if (msg.author.id != bot.user.id && message.author.bot) return;
-        if (msg.author.id != message.author.id) return;
+        if (msg.author != message.author) return;
 
         conversationalLog.push({
-            role: 'user',
-            content: message.content,
+            role: 'assistant',
+            content: msg.content,
         });
     });
-
-    conversationalLog.push({
-        role: 'user',
-        content: message.content,
-    })
     const result = await openai.createChatCompletion({
         model: 'gpt-3.5-turbo',
         messages: conversationalLog,
